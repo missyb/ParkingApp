@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FlashSample.XForms.Views.LocationDetailPage"
+             xmlns:model="clr-namespace:FlashSample.SharedLibrary;assembly=FlashSample.SharedLIbrary"
+             xmlns:local="clr-namespace:FlashSample.XForms.ViewModels"  
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*">
+        <StackLayout Grid.Row="0" Spacing="20" Padding="15">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Name:"
+                       FontSize="Medium"
+                       FontAttributes="Bold"/>
+                <Label Text="{Binding Name}"
+                       FontSize="Medium"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Available Spots:"
+                       FontSize="Medium"
+                       FontAttributes="Bold" />
+                <Label Text="{Binding SpotsAvailable}"
+                       FontSize="Medium"/>
+            </StackLayout>
+        </StackLayout>
+        <CollectionView x:Name="SpotsListView"
+                    ItemsSource="{Binding Spots}"
+                    SelectionMode="None"
+                    Grid.Row="1">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="10" x:DataType="model:ParkingSpot">
+
+                        <Frame HasShadow="False">
+                            <Label Text="{Binding SpotNumber}"
+                                    FontSize="16" />
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame"
+                                                Binding="{Binding Occupied}"
+                                                Value="True">
+                                    <Setter Property="BackgroundColor" Value="PaleVioletRed" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame"
+                                                Binding="{Binding Occupied}"
+                                                Value="False">
+                                    <Setter Property="BackgroundColor" Value="PaleGreen" />
+                                </DataTrigger>
+                            </Frame.Triggers>
+                        </Frame>
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:LocationDetailViewModel}}, Path=SpotTapped}"		
+                                CommandParameter="{Binding .}">
+                            </TapGestureRecognizer>
+                        </StackLayout.GestureRecognizers>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+    
+</ContentPage>
